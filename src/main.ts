@@ -8,5 +8,5 @@ function describe(name: string, rate: number): string {
 console.log(describe(machineName, outputPerTick));
 
 // Uncomment these one at a time and hover over them in VS Code:
-outputPerTick = "fast";
-describe(outputPerTick, machineName);
+// outputPerTick = "fast";
+// describe(outputPerTick, machineName);
