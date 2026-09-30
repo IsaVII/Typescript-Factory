@@ -20,3 +20,5 @@ export interface Lesson {
   blocks: readonly Block[];
   exercise?: string;
 }
+
+export type QuizBlock = Extract<Block, { kind: "quiz" }>;
