@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { lessons } from "../lessons";
 import type { Lesson } from "../lessons/types";
 import { BlockView } from "./BlockView";
+import { useProgress } from "../progress";
 
 interface LessonViewProps {
   lesson: Lesson;
@@ -11,6 +12,8 @@ export function LessonView({ lesson }: LessonViewProps) {
   const index = lessons.indexOf(lesson);
   const previous = lessons[index - 1];
   const next = lessons[index + 1];
+  const { isCompleted, toggle } = useProgress();
+  const done = isCompleted(lesson.slug);
 
   return (
     <article className="mx-auto max-w-3xl space-y-8">
@@ -23,6 +26,18 @@ export function LessonView({ lesson }: LessonViewProps) {
       {lesson.blocks.map((block, blockIndex) => (
         <BlockView key={blockIndex} block={block} />
       ))}
+
+      <button
+        type="button"
+        onClick={() => toggle(lesson.slug)}
+        className={
+          done
+            ? "w-full rounded-xl border border-emerald-500/50 bg-emerald-500/10 px-4 py-3 font-medium text-emerald-300"
+            : "w-full rounded-xl bg-amber-500 px-4 py-3 font-semibold text-slate-950 hover:bg-amber-400"
+        }
+      >
+        {done ? "✓ Completed (click to undo)" : "Mark lesson as complete"}
+      </button>
 
       <nav className="flex justify-between border-t border-slate-800 pt-6 text-sm">
         {previous ? (
