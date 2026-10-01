@@ -1,0 +1,68 @@
+---
+title: "3. Union & literal types"
+summary: "Say exactly which values are allowed, such as \"idle\" | \"running\" | \"broken\"."
+level: basics
+---
+
+import { Quiz } from "../../components/Quiz";
+import { Tip } from "../../components/Tip";
+
+A **literal type** is a type with exactly one value. `"idle"` isn't just any string. It's a type that only allows the string `"idle"`.
+
+## Unions: this OR that
+
+Combine types with `|` to make a **union**. A value of a union type can be any one of its members.
+
+### A union of literal types
+
+```ts
+type MachineStatus = "idle" | "running" | "broken";
+
+let status: MachineStatus = "idle";
+status = "running";  // ✅
+status = "exploded"; // ❌ Type '"exploded"' is not assignable to type 'MachineStatus'.
+```
+
+<Tip>
+  Compare this to `status: string`. It would accept any typo. A literal union gives you autocomplete for every allowed value and catches typos as you type.
+</Tip>
+
+### Unions can mix any types
+
+```ts
+type Speed = 1 | 2 | 4;
+type Rate = number | string;
+type MaybeMachine = Machine | null;
+```
+
+## You can only use what all members share
+
+With a `number | string`, TypeScript only allows what works for _both_. `.toUpperCase()` exists only on strings, so you have to check which one you have first. That check is called **narrowing**, and it's the next lesson.
+
+```ts
+function show(rate: number | string) {
+  rate.toUpperCase(); // ❌ Property 'toUpperCase' does not exist on type 'number'.
+  rate.toString();    // ✅ both numbers and strings have toString()
+}
+```
+
+<Quiz
+  options={["3", '"2"', "4", "0"]}
+  answer="4"
+  explanation="Only the exact numbers 1, 2 and 4 are allowed. `\"2\"` is a string, not the number 2."
+>
+  Which value is allowed for `type Speed = 1 | 2 | 4`?
+</Quiz>
+
+<Quiz
+  options={[
+    "interface is deprecated",
+    "An interface can only describe object shapes, not unions",
+    "type is faster at runtime",
+    "There's no difference"
+  ]}
+  answer="An interface can only describe object shapes, not unions"
+  explanation="Interfaces describe objects. Unions such as `\"idle\" | \"running\"` need a `type` alias. Neither exists at runtime."
+>
+  Why use `type` instead of `interface` for `MachineStatus`?
+</Quiz>

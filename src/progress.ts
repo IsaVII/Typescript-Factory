@@ -1,35 +1,7 @@
 import { useSyncExternalStore } from "react";
+import { isStringArray, load, save } from "./storage";
 
 const STORAGE_KEY = "ts-factory:completed";
-
-function isStringArray(value: unknown): value is string[] {
-  return (
-    Array.isArray(value) && value.every((item) => typeof item === "string")
-  );
-}
-
-function load<T>(
-  key: string,
-  fallback: T,
-  isValid: (value: unknown) => value is T,
-): T {
-  try {
-    const raw = localStorage.getItem(key);
-    if (raw === null) return fallback;
-    const parsed: unknown = JSON.parse(raw);
-    return isValid(parsed) ? parsed : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function save(key: string, value: unknown): void {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // Storage can be blocked (e.g. private browsing). Progress just won't be remembered.
-  }
-}
 
 let completed: readonly string[] = load<string[]>(
   STORAGE_KEY,

@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { lessons } from "../lessons";
 import type { Lesson } from "../lessons/types";
-import { BlockView } from "./BlockView";
 import { useProgress } from "../progress";
 
 interface LessonViewProps {
@@ -23,9 +22,9 @@ export function LessonView({ lesson }: LessonViewProps) {
         <p className="text-lg text-slate-400">{lesson.summary}</p>
       </header>
 
-      {lesson.blocks.map((block, blockIndex) => (
-        <BlockView key={blockIndex} block={block} />
-      ))}
+      <div className="prose prose-invert max-w-none prose-pre:rounded-xl prose-pre:border prose-pre:border-slate-800 prose-code:before:content-none prose-code:after:content-none">
+        <lesson.Content />
+      </div>
 
       <button
         type="button"

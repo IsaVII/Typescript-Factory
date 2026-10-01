@@ -1,0 +1,86 @@
+---
+title: "4. Narrowing"
+summary: "Check a value at runtime, and TypeScript learns its precise type."
+level: basics
+---
+
+import { Quiz } from "../../components/Quiz";
+import { Tip } from "../../components/Tip";
+
+**Narrowing** is how TypeScript follows your checks. After an `if`, a `switch` or an early `return`, TypeScript knows a more precise type for the variable in that part of the code.
+
+## typeof: for primitives
+
+```ts
+function formatRate(rate: number | string): string {
+  if (typeof rate === "number") {
+    return rate.toFixed(1); // here: number
+  }
+  return rate.toUpperCase(); // here: string (the only option left)
+}
+```
+
+## Checking for null: the early return
+
+```ts
+const app = document.querySelector<HTMLDivElement>("#app"); // HTMLDivElement | null
+if (!app) throw new Error("missing #app");
+app.innerHTML = "hi"; // here: HTMLDivElement
+```
+
+## instanceof: for classes (like DOM elements)
+
+```ts
+function handle(target: EventTarget | null) {
+  if (target instanceof HTMLButtonElement) {
+    target.disabled = true; // here: HTMLButtonElement
+  }
+}
+```
+
+## Discriminated unions
+
+When every member of a union has a shared field with a different literal value, such as `kind`, checking that field narrows the whole object. This is how `BlockView.tsx` in this app works.
+
+```ts
+type Machine =
+  | { kind: "sawmill"; planksPerTick: number }
+  | { kind: "conveyor"; speed: number };
+
+function describe(machine: Machine): string {
+  switch (machine.kind) {
+    case "sawmill":
+      return "Planks: " + machine.planksPerTick; // only sawmill fields here
+    case "conveyor":
+      return "Speed: " + machine.speed;
+    default: {
+      const unhandled: never = machine; // error if a kind is forgotten
+      throw new Error("Unknown machine: " + JSON.stringify(unhandled));
+    }
+  }
+}
+```
+
+<Tip>
+  `never` is the type with no values. If every case is handled, nothing is left for `default`, so `machine` is `never` there. Add a new machine kind and forget to handle it, and this line becomes a compile error.
+</Tip>
+
+<Tip tone="warning">
+  Narrowing only happens through checks TypeScript can see. `machine as Sawmill` is a **type assertion**: it tells TypeScript to trust you without checking anything. Prefer a real check.
+</Tip>
+
+<Quiz
+  options={["string | number | null", "string", "string | null", "unknown"]}
+  answer="string"
+  explanation="The `typeof` check leaves only `string`."
+>
+  Inside `if (typeof x === "string") { … }`, where `x: string | number | null`, what is the type of `x`?
+</Quiz>
+
+<Quiz
+  options={["any", "unknown", "never", "undefined"]}
+  answer="never"
+  explanation="No possibilities are left, so the type is `never`. That's what makes the exhaustiveness check work."
+>
+  What is the type of a variable in a `default` branch after every case of a union has been handled?
+</Quiz>

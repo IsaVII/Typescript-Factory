@@ -1,0 +1,28 @@
+---
+title: "2. Object types: type aliases & interfaces"
+summary: "Describe the shape of an object, including optional and readonly properties."
+level: basics
+---
+
+import { Quiz } from "../../components/Quiz";
+
+TypeScript describes objects by their **shape**: which properties they have, and the type of each one.
+
+## type vs interface
+
+```ts
+type Machine = { name: string; rate: number };
+
+interface MachineInterface {
+  name: string;
+  rate: number;
+}
+```
+
+<Quiz
+  options={["string", "string | undefined", "string | null", "any"]}
+  answer="string | undefined"
+  explanation="An optional property may be missing, so reading it gives `string | undefined`."
+>
+  Given `interface Crate { label?: string }`, what is the type of `crate.label`?
+</Quiz>

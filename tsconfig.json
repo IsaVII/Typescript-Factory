@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "node"],
+  "types": ["vite/client", "node", "mdx"],
 
     "jsx": "react-jsx",
     "module": "preserve",

@@ -1,0 +1,48 @@
+---
+title: "1. Types, annotations & inference"
+summary: "What a type is, how to write one, and when TypeScript figures it out for you."
+level: basics
+---
+
+import { Quiz } from "../../components/Quiz";
+import { Tip } from "../../components/Tip";
+
+TypeScript is JavaScript plus **types**. A type describes what kind of value a variable can hold.
+TypeScript checks your code _before_ it runs, then the types are removed and plain JavaScript runs.
+
+## Type annotations
+
+Add a type with a colon after the name:
+
+```ts
+let machineName: string = "Sawmill";
+let outputPerTick: number = 2;
+
+outputPerTick = "fast"; // ❌ Type 'string' is not assignable to type 'number'.
+```
+
+## Type inference
+
+When you assign a value right away, TypeScript **infers** the type, so you usually don't need the annotation:
+
+```ts
+let outputPerTick = 2; // number
+const machineName = "Sawmill"; // the literal type "Sawmill"
+```
+
+<Tip>
+  Let TypeScript infer variable types, but **always annotate function
+  parameters**. TypeScript can't guess what callers will pass in.
+</Tip>
+
+<Tip tone="warning">
+  Avoid `any`: it switches type checking off for that value.
+</Tip>
+
+<Quiz
+  options={["10", "number", "any", "int"]}
+  answer="number"
+  explanation="A let can be reassigned, so TypeScript widens it to number. With const it would be the literal type 10."
+>
+  What type does TypeScript infer for `let speed = 10;`?
+</Quiz>
